@@ -394,8 +394,12 @@ function TempMailTab() {
 
 // ── Main GenerateSection ───────────────────────────────────────────────────────
 export function GenerateSection() {
-  const { expiresAt, activeMode, setActiveMode } = useEmailStore();
+  const { expiresAt, activeMode, setActiveMode, initEmail } = useEmailStore();
   const { formatted, isLow, isExpired } = useCountdown(expiresAt);
+
+  useEffect(() => {
+    initEmail();
+  }, [initEmail]);
 
   return (
     <section id="generate" className="relative py-20 px-4 sm:px-6">
