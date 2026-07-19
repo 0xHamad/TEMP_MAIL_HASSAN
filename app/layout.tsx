@@ -2,6 +2,8 @@ import { Inter, Roboto_Mono } from "next/font/google";
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { Toaster } from "sonner";
+import { ClickBurst } from "@/components/effects/click-burst";
+import { ScrollProgress } from "@/components/effects/scroll-progress";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -45,7 +47,9 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${robotoMono.variable} font-sans antialiased min-h-screen bg-background text-foreground`}
       >
+        <ScrollProgress />
         {children}
+        <ClickBurst />
         <Toaster richColors position="top-right" />
       </body>
     </html>
