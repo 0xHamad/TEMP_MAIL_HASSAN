@@ -8,7 +8,8 @@ export async function POST(req: Request) {
     if (password === "78651214") {
       // Set an admin cookie
       const oneDay = 24 * 60 * 60 * 1000;
-      cookies().set("admin_session", "true", {
+      const cookieStore = await cookies();
+      cookieStore.set("admin_session", "true", {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "lax",
