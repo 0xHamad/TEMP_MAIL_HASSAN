@@ -47,7 +47,7 @@ export function HeroSection() {
   };
 
   const handleScrollToInbox = () => {
-    document.querySelector("#inbox")?.scrollIntoView({ behavior: "smooth" });
+    document.querySelector("#generate")?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
@@ -86,9 +86,9 @@ export function HeroSection() {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.08] mb-6"
         >
-          <span className="text-foreground">Instant</span>
+          <span className="text-foreground">Hassan</span>
           <br />
-          <span className="gradient-text">Disposable Email</span>
+          <span className="gradient-text">Temp Mail</span>
         </motion.h1>
 
         {/* Subtitle */}

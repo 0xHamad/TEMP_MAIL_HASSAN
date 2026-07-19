@@ -6,12 +6,18 @@ const DOMAINS = [
   "temp.hassanai.xyz",
   "relay.hassanai.xyz",
   "secure.hassanai.xyz",
+  "vault.hassanai.xyz",
   "drop.hassanai.xyz",
   "ghost.hassanai.xyz",
+  "cloud.hassanai.xyz",
   "swift.hassanai.xyz",
+  "pulse.hassanai.xyz",
+  "spark.hassanai.xyz",
+  "nova.hassanai.xyz",
+  "nexus.hassanai.xyz",
 ];
 
-const EXPIRY_SECONDS = 10 * 60;
+const EXPIRY_SECONDS = 10 * 60; // 10 minutes
 
 function generateUsername(): string {
   const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
@@ -55,6 +61,7 @@ export const useEmailStore = create<EmailStore>((set) => ({
         currentEmail: generateEmail(),
         expiresAt: Date.now() + EXPIRY_SECONDS * 1000,
         isGenerating: false,
+        activeMode: "temp",
       });
     }, 500);
   },
@@ -85,6 +92,7 @@ export const useEmailStore = create<EmailStore>((set) => ({
     set({
       currentEmail: generateEmail(),
       expiresAt: Date.now() + EXPIRY_SECONDS * 1000,
+      activeMode: "temp",
     });
   },
 

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Zap, Mail, GitFork } from "lucide-react";
+import { Menu, X, Zap, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const navLinks = [
@@ -54,7 +54,7 @@ export function Navbar() {
                 <Mail className="w-4 h-4 text-primary" />
               </div>
               <span className="text-sm font-bold text-foreground tracking-tight">
-                TempMail<span className="text-primary"> Pro</span>
+                Hassan<span className="text-primary"> Temp Mail</span>
               </span>
             </motion.a>
 
@@ -74,20 +74,10 @@ export function Navbar() {
 
             {/* Right */}
             <div className="flex items-center gap-2">
-              <a
-                href="https://github.com/0xHamad/TEMP_MAIL_HASSAN"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hidden sm:flex items-center justify-center w-8 h-8 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-all"
-                aria-label="GitHub"
-              >
-                <GitFork className="w-4 h-4" />
-              </a>
-
               <Button
                 size="sm"
                 className="hidden sm:flex h-8 text-xs gap-1.5 bg-primary hover:bg-primary/90 text-white shadow-sm"
-                onClick={() => handleNavClick("#inbox")}
+                onClick={() => handleNavClick("#generate")}
               >
                 <Zap className="w-3 h-3" />
                 Get Email
@@ -129,7 +119,7 @@ export function Navbar() {
                   <Button
                     size="sm"
                     className="flex-1 h-9 text-xs gap-1.5 bg-primary hover:bg-primary/90 text-white"
-                    onClick={() => handleNavClick("#inbox")}
+                    onClick={() => handleNavClick("#generate")}
                   >
                     <Zap className="w-3 h-3" />
                     Get Free Email

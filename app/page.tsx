@@ -1,6 +1,6 @@
 import { Navbar } from "@/components/temp-mail/navbar";
 import { HeroSection } from "@/components/temp-mail/hero-section";
-import { InboxSection } from "@/components/temp-mail/inbox-section";
+import { GenerateSection } from "@/components/temp-mail/generate-section";
 import { FeaturesSection } from "@/components/temp-mail/features-section";
 import { ApiSection } from "@/components/temp-mail/api-section";
 import { FaqSection } from "@/components/temp-mail/faq-section";
@@ -11,7 +11,7 @@ export default function Page() {
     <main className="min-h-screen bg-background">
       <Navbar />
       <HeroSection />
-      <InboxSection />
+      <GenerateSection />
       <FeaturesSection />
       <ApiSection />
       <FaqSection />
