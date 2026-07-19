@@ -408,7 +408,7 @@ export function GenerateSection() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, amount: 0.05 }}
           className="text-center mb-12"
         >
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-medium mb-4">
@@ -427,7 +427,7 @@ export function GenerateSection() {
         <motion.div
           initial={{ opacity: 0, y: 30, scale: 0.97 }}
           whileInView={{ opacity: 1, y: 0, scale: 1 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, amount: 0.05 }}
           transition={{ duration: 0.5 }}
         >
           <div className="rounded-3xl border border-border bg-white shadow-lg p-6 sm:p-8">

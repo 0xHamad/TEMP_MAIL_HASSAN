@@ -74,7 +74,7 @@ export function Footer() {
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, amount: 0.05 }}
           className="pt-8 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4"
         >
           <p className="text-xs text-muted-foreground">

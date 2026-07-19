@@ -123,7 +123,7 @@ export function FeaturesSection() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, amount: 0.05 }}
           className="text-center mb-16"
         >
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-medium mb-4">
@@ -148,8 +148,8 @@ export function FeaturesSection() {
                 key={feature.title}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.04 }}
+                viewport={{ once: true, amount: 0.05 }}
+                transition={{ delay: i * 0.03 }}
                 whileHover={{ y: -3, transition: { duration: 0.2 } }}
                 className={`p-5 rounded-2xl border ${feature.border} bg-white hover:shadow-md transition-all`}
               >

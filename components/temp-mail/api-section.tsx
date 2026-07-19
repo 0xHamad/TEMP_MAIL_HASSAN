@@ -101,7 +101,7 @@ export function ApiSection() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, amount: 0.05 }}
           className="text-center mb-16"
         >
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-medium mb-4">
@@ -121,7 +121,7 @@ export function ApiSection() {
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, amount: 0.05 }}
             className="lg:col-span-2 space-y-4"
           >
             <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
@@ -164,7 +164,7 @@ export function ApiSection() {
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, amount: 0.05 }}
             className="lg:col-span-3"
           >
             <div className="rounded-2xl overflow-hidden border border-border shadow-sm code-block">

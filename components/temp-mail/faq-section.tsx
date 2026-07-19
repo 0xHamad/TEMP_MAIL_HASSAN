@@ -49,7 +49,7 @@ export function FaqSection() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, amount: 0.05 }}
           className="text-center mb-14"
         >
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-medium mb-4">
@@ -71,8 +71,8 @@ export function FaqSection() {
               key={i}
               initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.04 }}
+              viewport={{ once: true, amount: 0.05 }}
+              transition={{ delay: i * 0.03 }}
               className="rounded-2xl border border-border bg-white overflow-hidden"
             >
               <button
