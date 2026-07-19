@@ -13,13 +13,7 @@ import { QRCodeSVG } from "qrcode.react";
 import { useEmailStore } from "@/lib/email-store";
 import { TempMailInbox } from "@/components/temp-mail/inbox-section";
 
-const DOMAINS = [
-  "mail.hassanai.xyz", "inbox.hassanai.xyz", "temp.hassanai.xyz",
-  "relay.hassanai.xyz", "secure.hassanai.xyz", "vault.hassanai.xyz",
-  "drop.hassanai.xyz", "ghost.hassanai.xyz", "cloud.hassanai.xyz",
-  "swift.hassanai.xyz", "pulse.hassanai.xyz", "spark.hassanai.xyz",
-  "nova.hassanai.xyz", "nexus.hassanai.xyz",
-];
+// Domains are now fetched dynamically from the store
 
 function useCountdown(expiresAt: number) {
   const [remaining, setRemaining] = useState<number>(0);
@@ -138,7 +132,7 @@ function GmailTab() {
 
 // ── Temp Mail Tab ──────────────────────────────────────────────────────────────
 function TempMailTab() {
-  const { currentEmail, expiresAt, isGenerating, generateNewEmail, extendTime, deleteInbox, setCurrentEmail } = useEmailStore();
+  const { currentEmail, expiresAt, isGenerating, generateNewEmail, extendTime, deleteInbox, setCurrentEmail, fetchDomains, domainsList } = useEmailStore();
   const [mounted, setMounted] = useState(false);
   const [domainOpen, setDomainOpen] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -149,7 +143,14 @@ function TempMailTab() {
 
   useEffect(() => {
     setMounted(true);
-  }, []);
+    fetchDomains();
+    // Track session (IP tracking)
+    fetch("/api/track", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "session" })
+    }).catch(() => {});
+  }, [fetchDomains]);
 
   useEffect(() => {
     if (isExpired && mounted) generateNewEmail();
@@ -157,7 +158,7 @@ function TempMailTab() {
 
   const displayEmail = mounted ? currentEmail : "";
   const user = displayEmail.split("@")[0] || "";
-  const domain = displayEmail.split("@")[1] || DOMAINS[0];
+  const domain = displayEmail.split("@")[1] || (domainsList[0] || "mail.hassanai.xyz");
 
   const handleCopy = useCallback(() => {
     navigator.clipboard.writeText(displayEmail).catch(() => {});
@@ -238,7 +239,7 @@ function TempMailTab() {
                   style={{ zIndex: 9999 }}
                 >
                   <div className="overflow-y-auto" style={{ maxHeight: 200 }}>
-                    {DOMAINS.map((d) => (
+                    {domainsList.map((d) => (
                       <button
                         key={d}
                         onClick={() => { 

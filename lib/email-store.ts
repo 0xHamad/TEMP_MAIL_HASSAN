@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-const DOMAINS = [
+export const DEFAULT_DOMAINS = [
   "mail.hassanai.xyz",
   "inbox.hassanai.xyz",
   "temp.hassanai.xyz",
@@ -28,9 +28,10 @@ function generateUsername(): string {
   ).join("");
 }
 
-function generateEmail(preferredDomain?: string): string {
+function generateEmail(preferredDomain?: string, domainsList?: string[]): string {
   const username = generateUsername();
-  const domain = preferredDomain || DOMAINS[Math.floor(Math.random() * DOMAINS.length)];
+  const list = (domainsList && domainsList.length > 0) ? domainsList : DEFAULT_DOMAINS;
+  const domain = preferredDomain || list[Math.floor(Math.random() * list.length)];
   return `${username}@${domain}`;
 }
 
@@ -40,6 +41,7 @@ interface EmailStore {
   isGenerating: boolean;
   gmailAddress: string;
   activeMode: "temp" | "gmail";
+  domainsList: string[];
 
   generateNewEmail: () => void;
   generateGmailAlias: () => Promise<void>;
@@ -49,6 +51,7 @@ interface EmailStore {
   setActiveMode: (mode: "temp" | "gmail") => void;
   initEmail: () => void;
   setCurrentEmail: (email: string) => void;
+  fetchDomains: () => Promise<void>;
 }
 
 export const useEmailStore = create<EmailStore>()(
@@ -59,28 +62,56 @@ export const useEmailStore = create<EmailStore>()(
       isGenerating: false,
       gmailAddress: "",
       activeMode: "temp",
+      domainsList: DEFAULT_DOMAINS,
+
+      fetchDomains: async () => {
+        try {
+          const res = await fetch("/api/domains");
+          if (res.ok) {
+            const data = await res.json();
+            if (data.domains && data.domains.length > 0) {
+              set({ domainsList: data.domains });
+            }
+          }
+        } catch (err) {
+          console.error("Failed to load domains", err);
+        }
+      },
 
       initEmail: () => {
-        const { currentEmail } = get();
+        const { currentEmail, domainsList } = get();
         if (!currentEmail || currentEmail.startsWith("x8fk2q@") || currentEmail.includes("x8fk2q")) {
+          const newEmail = generateEmail(undefined, domainsList);
           set({
-            currentEmail: generateEmail(),
+            currentEmail: newEmail,
             expiresAt: Date.now() + EXPIRY_SECONDS * 1000,
           });
+          // Track initial email generation
+          fetch("/api/track", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ action: "generate", email: newEmail })
+          }).catch(() => {});
         }
       },
 
       generateNewEmail: () => {
         set({ isGenerating: true });
-        const { currentEmail } = get();
+        const { currentEmail, domainsList } = get();
         const currentDomain = currentEmail ? currentEmail.split("@")[1] : undefined;
         setTimeout(() => {
+          const newEmail = generateEmail(currentDomain, domainsList);
           set({
-            currentEmail: generateEmail(currentDomain),
+            currentEmail: newEmail,
             expiresAt: Date.now() + EXPIRY_SECONDS * 1000,
             isGenerating: false,
             activeMode: "temp",
           });
+          fetch("/api/track", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ action: "generate", email: newEmail })
+          }).catch(() => {});
         }, 500);
       },
 
@@ -107,13 +138,19 @@ export const useEmailStore = create<EmailStore>()(
       },
 
       deleteInbox: () => {
-        const { currentEmail } = get();
+        const { currentEmail, domainsList } = get();
         const currentDomain = currentEmail ? currentEmail.split("@")[1] : undefined;
+        const newEmail = generateEmail(currentDomain, domainsList);
         set({
-          currentEmail: generateEmail(currentDomain),
+          currentEmail: newEmail,
           expiresAt: Date.now() + EXPIRY_SECONDS * 1000,
           activeMode: "temp",
         });
+        fetch("/api/track", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action: "generate", email: newEmail })
+        }).catch(() => {});
       },
 
       setGmailAddress: (email: string) => set({ gmailAddress: email }),
@@ -126,6 +163,7 @@ export const useEmailStore = create<EmailStore>()(
         currentEmail: state.currentEmail,
         expiresAt: state.expiresAt,
         activeMode: state.activeMode,
+        // We do NOT persist domainsList so it always fetches fresh
       }),
     }
   )
