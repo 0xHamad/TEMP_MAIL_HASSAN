@@ -100,21 +100,13 @@ export function ClickBurst() {
     resize();
     window.addEventListener("resize", resize);
 
-    const handleClick = (e: MouseEvent | TouchEvent) => {
-      let cx: number, cy: number;
-      if (e instanceof TouchEvent) {
-        const t = e.changedTouches[0];
-        cx = t.clientX;
-        cy = t.clientY;
-      } else {
-        cx = e.clientX;
-        cy = e.clientY;
-      }
-      spawn(cx, cy);
+    const handleClick = (e: PointerEvent) => {
+      // Ignore if it's not a primary button press (e.g., right click)
+      if (e.button !== 0 && e.pointerType === "mouse") return;
+      spawn(e.clientX, e.clientY);
     };
 
-    window.addEventListener("click", handleClick);
-    window.addEventListener("touchend", handleClick as EventListener);
+    window.addEventListener("pointerdown", handleClick as EventListener, { capture: true, passive: true });
 
     const ctx = canvas.getContext("2d")!;
 
@@ -164,8 +156,7 @@ export function ClickBurst() {
     return () => {
       cancelAnimationFrame(rafRef.current);
       window.removeEventListener("resize", resize);
-      window.removeEventListener("click", handleClick);
-      window.removeEventListener("touchend", handleClick as EventListener);
+      window.removeEventListener("pointerdown", handleClick as EventListener, { capture: true } as EventListenerOptions);
     };
   }, [spawn]);
 

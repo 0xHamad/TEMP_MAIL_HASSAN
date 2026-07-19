@@ -14,14 +14,38 @@ export async function GET() {
     // Fallback if DB is empty
     if (domains.length === 0) {
       return NextResponse.json({
-        domains: ["mail.hassanai.xyz", "temp.hassanai.xyz"]
+        domains: [
+          "mail.hassanai.xyz",
+          "secure.hassanai.xyz",
+          "vault.hassanai.xyz",
+          "ghost.hassanai.xyz",
+          "relay.hassanai.xyz",
+          "nova.hassanai.xyz",
+          "nexus.hassanai.xyz",
+          "swift.hassanai.xyz",
+          "prime.hassanai.xyz",
+          "pulse.hassanai.xyz"
+        ]
       });
     }
 
     return NextResponse.json({ domains });
   } catch (err) {
     console.error("Failed to fetch domains:", err);
-    return NextResponse.json({ domains: ["mail.hassanai.xyz", "temp.hassanai.xyz"] });
+    return NextResponse.json({
+      domains: [
+        "mail.hassanai.xyz",
+        "secure.hassanai.xyz",
+        "vault.hassanai.xyz",
+        "ghost.hassanai.xyz",
+        "relay.hassanai.xyz",
+        "nova.hassanai.xyz",
+        "nexus.hassanai.xyz",
+        "swift.hassanai.xyz",
+        "prime.hassanai.xyz",
+        "pulse.hassanai.xyz"
+      ]
+    });
   }
 }
 

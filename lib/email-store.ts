@@ -3,19 +3,15 @@ import { persist } from "zustand/middleware";
 
 export const DEFAULT_DOMAINS = [
   "mail.hassanai.xyz",
-  "inbox.hassanai.xyz",
-  "temp.hassanai.xyz",
-  "relay.hassanai.xyz",
   "secure.hassanai.xyz",
   "vault.hassanai.xyz",
-  "drop.hassanai.xyz",
   "ghost.hassanai.xyz",
-  "cloud.hassanai.xyz",
-  "swift.hassanai.xyz",
-  "pulse.hassanai.xyz",
-  "spark.hassanai.xyz",
+  "relay.hassanai.xyz",
   "nova.hassanai.xyz",
   "nexus.hassanai.xyz",
+  "swift.hassanai.xyz",
+  "prime.hassanai.xyz",
+  "pulse.hassanai.xyz",
 ];
 
 const EXPIRY_SECONDS = 10 * 60; // 10 minutes
@@ -99,8 +95,9 @@ export const useEmailStore = create<EmailStore>()(
         set({ isGenerating: true });
         const { currentEmail, domainsList } = get();
         const currentDomain = currentEmail ? currentEmail.split("@")[1] : undefined;
+        const validDomain = domainsList.includes(currentDomain || "") ? currentDomain : undefined;
         setTimeout(() => {
-          const newEmail = generateEmail(currentDomain, domainsList);
+          const newEmail = generateEmail(validDomain, domainsList);
           set({
             currentEmail: newEmail,
             expiresAt: Date.now() + EXPIRY_SECONDS * 1000,
@@ -140,7 +137,8 @@ export const useEmailStore = create<EmailStore>()(
       deleteInbox: () => {
         const { currentEmail, domainsList } = get();
         const currentDomain = currentEmail ? currentEmail.split("@")[1] : undefined;
-        const newEmail = generateEmail(currentDomain, domainsList);
+        const validDomain = domainsList.includes(currentDomain || "") ? currentDomain : undefined;
+        const newEmail = generateEmail(validDomain, domainsList);
         set({
           currentEmail: newEmail,
           expiresAt: Date.now() + EXPIRY_SECONDS * 1000,
