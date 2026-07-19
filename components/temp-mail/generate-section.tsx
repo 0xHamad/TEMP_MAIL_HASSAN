@@ -138,9 +138,7 @@ function GmailTab() {
 
 // ── Temp Mail Tab ──────────────────────────────────────────────────────────────
 function TempMailTab() {
-  const { currentEmail, expiresAt, isGenerating, generateNewEmail, extendTime, deleteInbox } = useEmailStore();
-  const [username, setUsername] = useState("");
-  const [selectedDomain, setSelectedDomain] = useState(DOMAINS[0]);
+  const { currentEmail, expiresAt, isGenerating, generateNewEmail, extendTime, deleteInbox, setCurrentEmail } = useEmailStore();
   const [mounted, setMounted] = useState(false);
   const [domainOpen, setDomainOpen] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -151,39 +149,24 @@ function TempMailTab() {
 
   useEffect(() => {
     setMounted(true);
-    const [user, domain] = currentEmail.split("@");
-    if (user && !user.includes("x8fk2q")) {
-      setUsername(user);
-    }
-    if (domain && DOMAINS.includes(domain)) setSelectedDomain(domain);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  useEffect(() => {
-    if (!mounted) return;
-    const [user, domain] = currentEmail.split("@");
-    if (user && !user.includes("x8fk2q")) {
-      setUsername(user);
-    } else if (user === "") {
-      setUsername("");
-    }
-    if (domain && DOMAINS.includes(domain)) setSelectedDomain(domain);
-  }, [currentEmail, mounted]);
 
   useEffect(() => {
     if (isExpired && mounted) generateNewEmail();
   }, [isExpired, mounted, generateNewEmail]);
 
-  const email = mounted ? `${username}@${selectedDomain}` : currentEmail;
+  const displayEmail = mounted ? currentEmail : "";
+  const user = displayEmail.split("@")[0] || "";
+  const domain = displayEmail.split("@")[1] || DOMAINS[0];
 
   const handleCopy = useCallback(() => {
-    navigator.clipboard.writeText(email).catch(() => {});
+    navigator.clipboard.writeText(displayEmail).catch(() => {});
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
-  }, [email]);
+  }, [displayEmail]);
 
   const handleShare = () => {
-    if (navigator.share) navigator.share({ title: "My Temp Email", text: email }).catch(() => {});
+    if (navigator.share) navigator.share({ title: "My Temp Email", text: displayEmail }).catch(() => {});
     else handleCopy();
   };
 
@@ -200,7 +183,7 @@ function TempMailTab() {
         <p className="text-[10px] text-primary/70 uppercase tracking-wider mb-2 font-medium">Your email address</p>
         <AnimatePresence mode="wait">
           <motion.p
-            key={isGenerating ? "gen" : email}
+            key={isGenerating ? "gen" : displayEmail}
             initial={{ opacity: 0, y: 5 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -5 }}
@@ -209,7 +192,7 @@ function TempMailTab() {
               isGenerating ? "text-muted-foreground" : "text-foreground"
             }`}
           >
-            {isGenerating ? "Generating address…" : email}
+            {isGenerating ? "Generating address…" : displayEmail}
           </motion.p>
         </AnimatePresence>
       </div>
@@ -221,8 +204,11 @@ function TempMailTab() {
             Username
           </label>
           <Input
-            value={username}
-            onChange={(e) => setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9]/g, ""))}
+            value={user}
+            onChange={(e) => {
+              const newUser = e.target.value.toLowerCase().replace(/[^a-z0-9]/g, "");
+              setCurrentEmail(`${newUser}@${domain}`);
+            }}
             placeholder="Custom username…"
             className="h-10 bg-white border-border rounded-xl font-mono text-sm"
           />
@@ -236,7 +222,7 @@ function TempMailTab() {
               onClick={() => setDomainOpen(!domainOpen)}
               className="w-full h-10 px-3 rounded-xl border border-border bg-white hover:bg-muted text-sm text-left flex items-center justify-between gap-2 transition-all hover:border-primary/40"
             >
-              <span className="text-xs font-mono text-foreground/80 truncate">@{selectedDomain}</span>
+              <span className="text-xs font-mono text-foreground/80 truncate">@{domain}</span>
               <motion.div animate={{ rotate: domainOpen ? 180 : 0 }} transition={{ duration: 0.2 }}>
                 <ChevronDown className="w-3.5 h-3.5 text-muted-foreground" />
               </motion.div>
@@ -255,14 +241,17 @@ function TempMailTab() {
                     {DOMAINS.map((d) => (
                       <button
                         key={d}
-                        onClick={() => { setSelectedDomain(d); setDomainOpen(false); }}
+                        onClick={() => { 
+                          setCurrentEmail(`${user}@${d}`);
+                          setDomainOpen(false); 
+                        }}
                         className={`w-full text-left px-3 py-2 text-xs font-mono transition-colors hover:bg-muted flex items-center gap-2 ${
-                          d === selectedDomain ? "text-primary bg-primary/5" : "text-foreground/70"
+                          d === domain ? "text-primary bg-primary/5" : "text-foreground/70"
                         }`}
                       >
                         <span className="text-muted-foreground/50">@</span>
                         <span>{d}</span>
-                        {d === selectedDomain && <Check className="w-3 h-3 text-primary ml-auto" />}
+                        {d === domain && <Check className="w-3 h-3 text-primary ml-auto" />}
                       </button>
                     ))}
                   </div>
@@ -387,9 +376,9 @@ function TempMailTab() {
             <div className="pt-4 border-t border-border flex flex-col items-center gap-3">
               <p className="text-xs text-muted-foreground">Scan to send to this address</p>
               <div className="p-3 rounded-xl bg-white shadow-md border border-border">
-                <QRCodeSVG value={`mailto:${email}`} size={140} bgColor="#ffffff" fgColor="#0f172a" level="M" />
+                <QRCodeSVG value={`mailto:${displayEmail}`} size={140} bgColor="#ffffff" fgColor="#0f172a" level="M" />
               </div>
-              <p className="text-[11px] font-mono text-muted-foreground break-all">{email}</p>
+              <p className="text-[11px] font-mono text-muted-foreground break-all">{displayEmail}</p>
             </div>
           </motion.div>
         )}

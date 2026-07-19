@@ -21,7 +21,38 @@ export async function GET(request: Request) {
     }
 
     const fileContent = fs.readFileSync(filePath, "utf8");
-    const emails = JSON.parse(fileContent);
+    let parsedEmails = [];
+    try {
+      parsedEmails = JSON.parse(fileContent);
+    } catch (e) {
+      parsedEmails = [];
+    }
+
+    // Ensure Haraka JSON structure matches frontend expectations
+    const emails = parsedEmails.map((e: any, index: number) => {
+      // Handle various date formats (timestamp, ISO string, or fallback)
+      let ts = Date.now();
+      if (typeof e.received_at === 'number') ts = e.received_at;
+      else if (typeof e.received_at === 'string') ts = new Date(e.received_at).getTime();
+      else if (typeof e.date === 'string') ts = new Date(e.date).getTime();
+      else if (typeof e.timestamp === 'number') ts = e.timestamp;
+      
+      if (isNaN(ts)) ts = Date.now();
+
+      return {
+        id: e.id || e.messageId || `msg-${index}-${ts}`,
+        from: e.from || "Unknown",
+        from_name: e.from_name || e.from || "Unknown",
+        subject: e.subject || "(No Subject)",
+        body_html: e.body_html || e.html || "",
+        body_text: e.body_text || e.text || e.body || "",
+        received_at: ts,
+        read: e.read || false,
+      };
+    });
+
+    // Sort by newest first
+    emails.sort((a, b) => b.received_at - a.received_at);
 
     return NextResponse.json({ emails });
   } catch (error) {

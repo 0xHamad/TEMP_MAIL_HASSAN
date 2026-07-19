@@ -28,9 +28,9 @@ function generateUsername(): string {
   ).join("");
 }
 
-function generateEmail(): string {
+function generateEmail(preferredDomain?: string): string {
   const username = generateUsername();
-  const domain = DOMAINS[Math.floor(Math.random() * DOMAINS.length)];
+  const domain = preferredDomain || DOMAINS[Math.floor(Math.random() * DOMAINS.length)];
   return `${username}@${domain}`;
 }
 
@@ -48,6 +48,7 @@ interface EmailStore {
   setGmailAddress: (email: string) => void;
   setActiveMode: (mode: "temp" | "gmail") => void;
   initEmail: () => void;
+  setCurrentEmail: (email: string) => void;
 }
 
 export const useEmailStore = create<EmailStore>()(
@@ -71,9 +72,11 @@ export const useEmailStore = create<EmailStore>()(
 
       generateNewEmail: () => {
         set({ isGenerating: true });
+        const { currentEmail } = get();
+        const currentDomain = currentEmail ? currentEmail.split("@")[1] : undefined;
         setTimeout(() => {
           set({
-            currentEmail: generateEmail(),
+            currentEmail: generateEmail(currentDomain),
             expiresAt: Date.now() + EXPIRY_SECONDS * 1000,
             isGenerating: false,
             activeMode: "temp",
@@ -104,8 +107,10 @@ export const useEmailStore = create<EmailStore>()(
       },
 
       deleteInbox: () => {
+        const { currentEmail } = get();
+        const currentDomain = currentEmail ? currentEmail.split("@")[1] : undefined;
         set({
-          currentEmail: generateEmail(),
+          currentEmail: generateEmail(currentDomain),
           expiresAt: Date.now() + EXPIRY_SECONDS * 1000,
           activeMode: "temp",
         });
@@ -113,6 +118,7 @@ export const useEmailStore = create<EmailStore>()(
 
       setGmailAddress: (email: string) => set({ gmailAddress: email }),
       setActiveMode: (mode: "temp" | "gmail") => set({ activeMode: mode }),
+      setCurrentEmail: (email: string) => set({ currentEmail: email }),
     }),
     {
       name: "temp-mail-storage",
