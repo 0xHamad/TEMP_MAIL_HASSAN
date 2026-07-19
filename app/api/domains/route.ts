@@ -56,3 +56,29 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Failed to add domain" }, { status: 500 });
   }
 }
+
+export async function DELETE(req: Request) {
+  try {
+    const body = await req.json();
+    const { domain, password } = body;
+
+    if (password !== "78651214") {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    if (!domain) {
+      return NextResponse.json({ error: "Domain is required" }, { status: 400 });
+    }
+
+    const serviceClient = getServiceSupabase();
+    const { error } = await serviceClient.from("domains").delete().eq("domain", domain);
+
+    if (error) throw error;
+
+    return NextResponse.json({ success: true });
+  } catch (err) {
+    console.error("Failed to delete domain:", err);
+    return NextResponse.json({ error: "Failed to delete domain" }, { status: 500 });
+  }
+}
+

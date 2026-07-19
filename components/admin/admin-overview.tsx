@@ -6,7 +6,9 @@ import { Users, Mail, Activity } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export function AdminOverview() {
-  const [stats, setStats] = useState({ totalSessions: 0, uniqueIps: 0, emailsCreatedToday: 0 });
+  const [stats, setStats] = useState<{ totalSessions: number, uniqueIps: number, emailsCreatedToday: number, ipList?: string[] }>({ 
+    totalSessions: 0, uniqueIps: 0, emailsCreatedToday: 0, ipList: [] 
+  });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -45,6 +47,28 @@ export function AdminOverview() {
           subtitle="Distinct visitors today"
         />
       </div>
+
+      {/* IP List Section */}
+      <Card className="rounded-2xl border-border shadow-sm mt-6">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-lg">Recent Visitors (IP Addresses)</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {loading ? (
+            <p className="text-sm text-muted-foreground">Loading IPs...</p>
+          ) : stats.ipList && stats.ipList.length > 0 ? (
+            <div className="flex flex-wrap gap-2">
+              {stats.ipList.map((ip, i) => (
+                <div key={i} className="px-3 py-1.5 bg-muted/50 border border-border rounded-lg text-xs font-mono text-foreground">
+                  {ip}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-sm text-muted-foreground">No IP addresses recorded today.</p>
+          )}
+        </CardContent>
+      </Card>
     </motion.div>
   );
 }

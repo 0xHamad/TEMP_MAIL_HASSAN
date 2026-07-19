@@ -54,6 +54,28 @@ export function AdminDomains() {
     }
   };
 
+  const handleDelete = async (domainToDelete: string) => {
+    if (!confirm(`Are you sure you want to delete ${domainToDelete}?`)) return;
+    
+    try {
+      const res = await fetch("/api/domains", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ domain: domainToDelete, password: "78651214" })
+      });
+      const data = await res.json();
+      
+      if (data.success) {
+        toast.success("Domain deleted");
+        fetchDomains();
+      } else {
+        toast.error(data.error || "Failed to delete");
+      }
+    } catch (err) {
+      toast.error("Network error");
+    }
+  };
+
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
       <div>
@@ -106,6 +128,9 @@ export function AdminDomains() {
                       <a href={`https://${d}`} target="_blank" rel="noreferrer" className="p-1.5 hover:bg-muted rounded-md text-muted-foreground">
                         <ExternalLink className="w-3.5 h-3.5" />
                       </a>
+                      <button onClick={() => handleDelete(d)} className="p-1.5 hover:bg-destructive/10 hover:text-destructive rounded-md text-muted-foreground transition-colors">
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
                     </div>
                   </div>
                 ))}

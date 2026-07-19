@@ -33,13 +33,14 @@ export async function GET(req: Request) {
 
     // Calculate stats
     const totalSessions = sessionData?.length || 0;
-    const uniqueIps = new Set(sessionData?.map(s => s.ip_address) || []).size;
+    const uniqueIpsList = Array.from(new Set(sessionData?.map(s => s.ip_address) || []));
     const emailsCreatedToday = emailsData?.length || 0;
 
     return NextResponse.json({
       totalSessions,
-      uniqueIps,
-      emailsCreatedToday
+      uniqueIps: uniqueIpsList.length,
+      emailsCreatedToday,
+      ipList: uniqueIpsList
     });
   } catch (err) {
     return NextResponse.json({ error: "Failed to fetch stats" }, { status: 500 });
