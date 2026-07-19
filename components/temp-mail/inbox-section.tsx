@@ -122,10 +122,10 @@ export function TempMailInbox() {
     setReadIds(new Set());
   }, [currentEmail]);
 
-  // Auto-poll every 15 seconds
+  // Auto-poll every 2 seconds
   useEffect(() => {
     fetchEmails();
-    pollingRef.current = setInterval(() => fetchEmails(true), 15000);
+    pollingRef.current = setInterval(() => fetchEmails(true), 2000);
     return () => {
       if (pollingRef.current) clearInterval(pollingRef.current);
     };
@@ -252,7 +252,7 @@ export function TempMailInbox() {
                 </div>
                 <div className="flex items-center gap-1.5 text-xs text-muted-foreground bg-muted px-3 py-1.5 rounded-full">
                   <AlertCircle className="w-3 h-3" />
-                  Auto-refresh every 15s
+                  Auto-refresh every 2s
                 </div>
               </motion.div>
             ) : (

@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Zap, Mail } from "lucide-react";
+import { Menu, X, Zap } from "lucide-react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 
 const navLinks = [
@@ -50,8 +51,14 @@ export function Navbar() {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
-              <div className="flex items-center justify-center w-8 h-8 rounded-xl bg-primary/10 border border-primary/20 group-hover:border-primary/40 transition-all">
-                <Mail className="w-4 h-4 text-primary" />
+              <div className="relative w-8 h-8 rounded-xl overflow-hidden shadow-sm ring-1 ring-border group-hover:ring-primary/30 transition-all">
+                <Image
+                  src="/logo.png"
+                  alt="Hassan Temp Mail logo"
+                  fill
+                  className="object-cover"
+                  priority
+                />
               </div>
               <span className="text-sm font-bold text-foreground tracking-tight">
                 Hassan<span className="text-primary"> Temp Mail</span>
