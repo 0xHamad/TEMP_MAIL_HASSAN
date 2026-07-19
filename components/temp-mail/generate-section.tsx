@@ -152,7 +152,9 @@ function TempMailTab() {
   useEffect(() => {
     setMounted(true);
     const [user, domain] = currentEmail.split("@");
-    setUsername(user ?? "x8fk2q");
+    if (user && !user.includes("x8fk2q")) {
+      setUsername(user);
+    }
     if (domain && DOMAINS.includes(domain)) setSelectedDomain(domain);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -160,7 +162,11 @@ function TempMailTab() {
   useEffect(() => {
     if (!mounted) return;
     const [user, domain] = currentEmail.split("@");
-    setUsername(user ?? "");
+    if (user && !user.includes("x8fk2q")) {
+      setUsername(user);
+    } else if (user === "") {
+      setUsername("");
+    }
     if (domain && DOMAINS.includes(domain)) setSelectedDomain(domain);
   }, [currentEmail, mounted]);
 

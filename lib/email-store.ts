@@ -61,7 +61,7 @@ export const useEmailStore = create<EmailStore>()(
 
       initEmail: () => {
         const { currentEmail } = get();
-        if (!currentEmail || currentEmail === "x8fk2q@mail.hassanai.xyz") {
+        if (!currentEmail || currentEmail.startsWith("x8fk2q@") || currentEmail.includes("x8fk2q")) {
           set({
             currentEmail: generateEmail(),
             expiresAt: Date.now() + EXPIRY_SECONDS * 1000,
