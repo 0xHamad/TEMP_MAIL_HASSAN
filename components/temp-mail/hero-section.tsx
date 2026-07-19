@@ -57,7 +57,7 @@ export function HeroSection() {
     >
       {/* Background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-primary/6 rounded-full blur-[140px] animate-blob" />
+        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[140px] animate-blob" />
         <div className="absolute top-1/3 right-1/4 w-[400px] h-[400px] bg-purple-accent/5 rounded-full blur-[120px] animate-blob-delay" />
         <div className="absolute bottom-1/4 left-1/3 w-[350px] h-[350px] bg-cyan-accent/4 rounded-full blur-[100px] animate-blob-delay-2" />
         <div className="absolute inset-0 grid-bg opacity-60" />
@@ -150,7 +150,7 @@ export function HeroSection() {
                       ? "bg-red-50 text-red-600 border-red-200"
                       : isLow
                       ? "bg-yellow-50 text-yellow-700 border-yellow-200"
-                      : "bg-primary/8 text-primary border-primary/20"
+                      : "bg-primary/10 text-primary border-primary/20"
                   }`}
                 >
                   <Timer className="w-2.5 h-2.5" />

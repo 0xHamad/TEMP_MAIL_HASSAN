@@ -87,7 +87,7 @@ export function Navbar() {
               <Button
                 size="sm"
                 className="hidden sm:flex h-8 text-xs gap-1.5 bg-primary hover:bg-primary/90 text-white shadow-sm"
-                onClick={() => handleNavClick("#generate")}
+                onClick={() => handleNavClick("#inbox")}
               >
                 <Zap className="w-3 h-3" />
                 Get Email
@@ -129,7 +129,7 @@ export function Navbar() {
                   <Button
                     size="sm"
                     className="flex-1 h-9 text-xs gap-1.5 bg-primary hover:bg-primary/90 text-white"
-                    onClick={() => handleNavClick("#generate")}
+                    onClick={() => handleNavClick("#inbox")}
                   >
                     <Zap className="w-3 h-3" />
                     Get Free Email

@@ -109,7 +109,8 @@ export function InboxSection() {
   const [polling, setPolling] = useState(false);
   const [selected, setSelected] = useState<EmailMessage | null>(null);
   const [readIds, setReadIds] = useState<Set<string>>(new Set());
-  const [demoLoaded, setDemoLoaded] = useState(false);
+  const demoLoadedRef = useRef(false);
+  const isFirstFetchRef = useRef(true);
   const pollingRef = useRef<NodeJS.Timeout | null>(null);
   const { formatted, isLow, isExpired, pct } = useCountdown(expiresAt);
 
@@ -123,24 +124,44 @@ export function InboxSection() {
       const data = await res.json();
       const fetched: EmailMessage[] = data.emails ?? [];
 
-      setEmails((prev) => {
-        if (fetched.length > prev.filter((e) => !e.id.startsWith("demo")).length) {
-          const newest = fetched[fetched.length - 1];
-          if (newest) toast.success(`New email from ${newest.from_name || newest.from}`);
-        }
-        return fetched;
-      });
-    } catch {
-      // Show demo emails if real fetch fails
-      if (!demoLoaded) {
+      if (fetched.length > 0) {
+        // Real emails exist — show them
+        setEmails((prev) => {
+          const prevRealCount = prev.filter((e) => !e.id.startsWith("demo")).length;
+          if (fetched.length > prevRealCount) {
+            const newest = fetched[fetched.length - 1];
+            if (newest && !isFirstFetchRef.current) {
+              toast.success(`New email from ${newest.from_name || newest.from}`);
+            }
+          }
+          return fetched;
+        });
+        demoLoadedRef.current = false; // real emails now, clear demo flag
+      } else if (isFirstFetchRef.current && !demoLoadedRef.current) {
+        // Empty inbox on first load — show demo emails so UI is not blank
         setEmails(DEMO_EMAILS);
-        setDemoLoaded(true);
+        demoLoadedRef.current = true;
+      }
+    } catch {
+      // Network error — fall back to demo emails
+      if (!demoLoadedRef.current) {
+        setEmails(DEMO_EMAILS);
+        demoLoadedRef.current = true;
       }
     } finally {
+      isFirstFetchRef.current = false;
       setLoading(false);
       setPolling(false);
     }
-  }, [currentEmail, demoLoaded]);
+  }, [currentEmail]);
+
+  // Reset demo/first-fetch flags and clear emails when email address changes
+  useEffect(() => {
+    demoLoadedRef.current = false;
+    isFirstFetchRef.current = true;
+    setEmails([]);
+    setSelected(null);
+  }, [currentEmail]);
 
   // Auto-poll every 15 seconds
   useEffect(() => {

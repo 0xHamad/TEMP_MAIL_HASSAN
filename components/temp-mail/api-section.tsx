@@ -104,7 +104,7 @@ export function ApiSection() {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/8 border border-primary/15 text-primary text-xs font-medium mb-4">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-medium mb-4">
             <Code2 className="w-3.5 h-3.5" />
             Developer API
           </div>
@@ -169,7 +169,7 @@ export function ApiSection() {
           >
             <div className="rounded-2xl overflow-hidden border border-border shadow-sm code-block">
               {/* Code tab bar */}
-              <div className="flex items-center justify-between px-4 py-3 bg-[oklch(0.20_0.01_260)] border-b border-white/8">
+              <div className="flex items-center justify-between px-4 py-3 bg-[oklch(0.20_0.01_260)] border-b border-white/10">
                 <div className="flex gap-1">
                   {tabs.map((tab) => (
                     <button
@@ -178,7 +178,7 @@ export function ApiSection() {
                       className={`px-3 py-1 rounded-md text-xs transition-all ${
                         activeTab === tab.id
                           ? "bg-white/15 text-white font-medium"
-                          : "text-white/50 hover:text-white/75 hover:bg-white/8"
+                          : "text-white/50 hover:text-white/75 hover:bg-white/10"
                       }`}
                     >
                       {tab.label}
@@ -197,18 +197,27 @@ export function ApiSection() {
                         {i + 1}
                       </span>
                       <span
-                        className="text-[#a5d6ff] flex-1"
+                        className="text-[#e6edf3] flex-1"
                         dangerouslySetInnerHTML={{
-                          __html: line
-                            .replace(/&/g, "&amp;")
-                            .replace(/</g, "&lt;")
-                            .replace(/>/g, "&gt;")
-                            .replace(/(\/\/.*)/g, '<span style="color: #8b949e">$1</span>')
-                            .replace(/(#.*)/g, '<span style="color: #8b949e">$1</span>')
-                            .replace(/(".*?")/g, '<span style="color: #a5d6ff">$1</span>')
-                            .replace(/('.*?')/g, '<span style="color: #a5d6ff">$1</span>')
-                            .replace(/(`.*?`)/g, '<span style="color: #79c0ff">$1</span>')
-                            .replace(/\b(const|let|var|async|await|import|from|for|of|return|print|import)\b/g, '<span style="color: #ff7b72">$1</span>'),
+                          __html: (() => {
+                            const escaped = line
+                              .replace(/&/g, "&amp;")
+                              .replace(/</g, "&lt;")
+                              .replace(/>/g, "&gt;");
+                            // Comments take full precedence — match from // or # to end of line
+                            if (/^\s*(\/\/|#)/.test(escaped)) {
+                              return `<span style="color:#8b949e">${escaped}</span>`;
+                            }
+                            const inlineComment = escaped.match(/^(.*?)(\/\/.*)$/);
+                            const commentPart = inlineComment ? inlineComment[2] : "";
+                            const codePart = inlineComment ? inlineComment[1] : escaped;
+                            const highlighted = codePart
+                              .replace(/\b(const|let|var|async|await|import|from|for|of|return|print)\b/g, '<span style="color:#ff7b72">$1</span>')
+                              .replace(/(`[^`]*`)/g, '<span style="color:#79c0ff">$1</span>')
+                              .replace(/("[^"]*")/g, '<span style="color:#a5d6ff">$1</span>')
+                              .replace(/('[^']*')/g, '<span style="color:#a5d6ff">$1</span>');
+                            return highlighted + (commentPart ? `<span style="color:#8b949e">${commentPart}</span>` : "");
+                          })(),
                         }}
                       />
                     </div>
