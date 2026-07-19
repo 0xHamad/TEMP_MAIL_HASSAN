@@ -24,7 +24,7 @@ export function Footer() {
   return (
     <footer className="border-t border-border bg-white">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-10 mb-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-10 mb-10">
           {/* Brand column */}
           <div className="space-y-4">
             <div className="flex items-center gap-2.5">
@@ -35,7 +35,7 @@ export function Footer() {
                 Hassan<span className="text-primary"> Temp Mail</span>
               </span>
             </div>
-            <p className="text-xs text-muted-foreground leading-relaxed max-w-[220px]">
+            <p className="text-xs text-muted-foreground leading-relaxed max-w-[260px]">
               Instant disposable email addresses. Protect your privacy, avoid spam, stay anonymous online.
             </p>
             <div className="flex flex-wrap gap-2">
@@ -66,26 +66,6 @@ export function Footer() {
                 </li>
               ))}
             </ul>
-          </div>
-
-          {/* Status column */}
-          <div className="space-y-4">
-            <h4 className="text-xs font-semibold text-foreground uppercase tracking-wider">Status</h4>
-            <div className="space-y-3">
-              {[
-                { label: "Email Service", status: "Operational" },
-                { label: "IMAP Gateway", status: "Operational" },
-                { label: "API Endpoints", status: "Operational" },
-              ].map(({ label, status }) => (
-                <div key={label} className="flex items-center justify-between">
-                  <span className="text-xs text-muted-foreground">{label}</span>
-                  <div className="flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-green-500" />
-                    <span className="text-[10px] text-green-600 font-medium">{status}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
           </div>
         </div>
 
