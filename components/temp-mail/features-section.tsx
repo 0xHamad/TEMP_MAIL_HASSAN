@@ -36,7 +36,7 @@ const features = [
   {
     icon: RefreshCw,
     title: "Auto-Refresh Inbox",
-    description: "Emails appear automatically every 15 seconds — no page reload needed.",
+    description: "Emails appear automatically every 2 seconds — no page reload needed.",
     color: "text-green-500",
     bg: "bg-green-50",
     border: "border-green-100",

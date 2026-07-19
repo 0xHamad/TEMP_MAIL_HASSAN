@@ -17,15 +17,15 @@ const robotoMono = Roboto_Mono({
 
 export const metadata: Metadata = {
   title: {
-    template: "%s | TempMail Pro",
-    default: "TempMail Pro – Instant Disposable Email",
+    template: "%s | Hassan Mail",
+    default: "Hassan Mail – Instant Disposable Email",
   },
   description:
-    "Generate secure disposable email addresses instantly. Receive emails in real time without registration. Fast, private, and free.",
-  keywords: ["temp mail", "temporary email", "disposable email", "anonymous email"],
+    "Instant disposable email addresses. Protect your privacy, avoid spam, stay anonymous online. Free, fast, no registration.",
+  keywords: ["hassan mail", "temp mail", "temporary email", "disposable email", "anonymous email"],
   openGraph: {
-    title: "TempMail Pro – Instant Disposable Email",
-    description: "Generate secure disposable email addresses instantly. No registration required.",
+    title: "Hassan Mail – Instant Disposable Email",
+    description: "Instant disposable email addresses. No registration, no tracking.",
     type: "website",
   },
 };

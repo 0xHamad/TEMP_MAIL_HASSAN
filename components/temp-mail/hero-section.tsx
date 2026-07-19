@@ -84,22 +84,12 @@ export function HeroSection() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.08] mb-6"
+          className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.08] mb-10"
         >
           <span className="text-foreground">Hassan</span>
           <br />
-          <span className="gradient-text">Temp Mail</span>
+          <span className="gradient-text">Mail</span>
         </motion.h1>
-
-        {/* Subtitle */}
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.32 }}
-          className="text-base sm:text-lg text-muted-foreground max-w-xl mx-auto mb-10 leading-relaxed"
-        >
-          Generate a secure temp email in one click. Receive emails instantly — no sign-up, no tracking, no spam.
-        </motion.p>
 
         {/* Email card */}
         <motion.div
@@ -219,32 +209,6 @@ export function HeroSection() {
               </Button>
             </div>
           </div>
-        </motion.div>
-
-        {/* Stats row */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
-          className="flex items-center justify-center gap-8 sm:gap-12 mb-14 flex-wrap"
-        >
-          {[
-            { value: "10M+", label: "Emails Generated" },
-            { value: "2.4M", label: "Active Users" },
-            { value: "99.9%", label: "Uptime" },
-            { value: "< 1s", label: "Delivery Speed" },
-          ].map((stat, i) => (
-            <motion.div
-              key={stat.label}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.6 + i * 0.1 }}
-              className="text-center"
-            >
-              <div className="text-xl font-bold text-foreground">{stat.value}</div>
-              <div className="text-xs text-muted-foreground">{stat.label}</div>
-            </motion.div>
-          ))}
         </motion.div>
 
         {/* Scroll indicator */}

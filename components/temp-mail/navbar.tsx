@@ -54,14 +54,14 @@ export function Navbar() {
               <div className="relative w-8 h-8 rounded-xl overflow-hidden shadow-sm ring-1 ring-border group-hover:ring-primary/30 transition-all">
                 <Image
                   src="/logo.png"
-                  alt="Hassan Temp Mail logo"
+                  alt="Hassan Mail logo"
                   fill
                   className="object-cover"
                   priority
                 />
               </div>
               <span className="text-sm font-bold text-foreground tracking-tight">
-                Hassan<span className="text-primary"> Temp Mail</span>
+                Hassan<span className="text-primary"> Mail</span>
               </span>
             </motion.a>
 

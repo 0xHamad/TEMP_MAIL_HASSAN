@@ -1,7 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Mail, Shield, Zap } from "lucide-react";
+import { Shield, Zap, Mail } from "lucide-react";
+import Image from "next/image";
 
 const footerLinks = [
   { label: "Features", href: "#features" },
@@ -28,11 +29,11 @@ export function Footer() {
           {/* Brand column */}
           <div className="space-y-4">
             <div className="flex items-center gap-2.5">
-              <div className="flex items-center justify-center w-8 h-8 rounded-xl bg-primary/10 border border-primary/20">
-                <Mail className="w-4 h-4 text-primary" />
+              <div className="relative w-8 h-8 rounded-xl overflow-hidden shadow-sm ring-1 ring-border">
+                <Image src="/logo.png" alt="Hassan Mail logo" fill className="object-cover" />
               </div>
               <span className="text-sm font-bold text-foreground">
-                Hassan<span className="text-primary"> Temp Mail</span>
+                Hassan<span className="text-primary"> Mail</span>
               </span>
             </div>
             <p className="text-xs text-muted-foreground leading-relaxed max-w-[260px]">
@@ -77,7 +78,7 @@ export function Footer() {
           className="pt-8 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4"
         >
           <p className="text-xs text-muted-foreground">
-            © {new Date().getFullYear()} Hassan Temp Mail. All rights reserved.
+            © {new Date().getFullYear()} Hassan Mail. All rights reserved.
           </p>
           <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
             <span className="w-1.5 h-1.5 rounded-full bg-green-500 status-dot-live" />
