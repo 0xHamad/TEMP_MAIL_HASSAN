@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { getServiceSupabase } from "@/lib/supabase";
 
 export async function POST(req: Request) {
   try {
@@ -7,6 +7,8 @@ export async function POST(req: Request) {
     const { action, email } = body;
     const ip = req.headers.get("x-forwarded-for") || req.headers.get("x-real-ip") || "unknown";
     const userAgent = req.headers.get("user-agent") || "unknown";
+
+    const supabase = getServiceSupabase();
 
     if (action === "session") {
       // Log session

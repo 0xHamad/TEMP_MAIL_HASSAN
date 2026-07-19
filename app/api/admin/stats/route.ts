@@ -16,16 +16,20 @@ export async function GET(req: Request) {
     const todayIso = today.toISOString();
 
     // Fetch unique IPs from sessions
-    const { data: sessionData } = await supabase
+    const { data: sessionData, error: err1 } = await supabase
       .from("analytics_sessions")
       .select("ip_address")
       .gte("created_at", todayIso);
 
+    if (err1) console.error("Stats API Session Error:", err1);
+
     // Fetch emails generated today
-    const { data: emailsData } = await supabase
+    const { data: emailsData, error: err2 } = await supabase
       .from("analytics_emails")
       .select("id")
       .gte("created_at", todayIso);
+
+    if (err2) console.error("Stats API Emails Error:", err2);
 
     // Calculate stats
     const totalSessions = sessionData?.length || 0;
