@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 const DOMAINS = [
   "mail.hassanai.xyz",
@@ -21,7 +22,8 @@ const EXPIRY_SECONDS = 10 * 60; // 10 minutes
 
 function generateUsername(): string {
   const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
-  return Array.from({ length: 6 }, () =>
+  // Increased from 6 to 10 for more professional random look
+  return Array.from({ length: 10 }, () =>
     chars[Math.floor(Math.random() * chars.length)]
   ).join("");
 }
@@ -45,57 +47,80 @@ interface EmailStore {
   deleteInbox: () => void;
   setGmailAddress: (email: string) => void;
   setActiveMode: (mode: "temp" | "gmail") => void;
+  initEmail: () => void;
 }
 
-export const useEmailStore = create<EmailStore>((set) => ({
-  currentEmail: "x8fk2q@mail.hassanai.xyz",
-  expiresAt: Date.now() + EXPIRY_SECONDS * 1000,
-  isGenerating: false,
-  gmailAddress: "",
-  activeMode: "temp",
-
-  generateNewEmail: () => {
-    set({ isGenerating: true });
-    setTimeout(() => {
-      set({
-        currentEmail: generateEmail(),
-        expiresAt: Date.now() + EXPIRY_SECONDS * 1000,
-        isGenerating: false,
-        activeMode: "temp",
-      });
-    }, 500);
-  },
-
-  generateGmailAlias: async () => {
-    set({ isGenerating: true });
-    try {
-      const res = await fetch("/api/gmail/generate");
-      if (!res.ok) throw new Error("Failed to generate gmail alias");
-      const data = await res.json();
-      if (data.email) {
-        set({ currentEmail: data.email, activeMode: "gmail" });
-      }
-    } catch (err) {
-      console.error(err);
-    } finally {
-      set({ isGenerating: false });
-    }
-  },
-
-  extendTime: () => {
-    set((state) => ({
-      expiresAt: Math.max(state.expiresAt, Date.now()) + EXPIRY_SECONDS * 1000,
-    }));
-  },
-
-  deleteInbox: () => {
-    set({
-      currentEmail: generateEmail(),
+export const useEmailStore = create<EmailStore>()(
+  persist(
+    (set, get) => ({
+      currentEmail: "", // Empty to trigger generation on first load
       expiresAt: Date.now() + EXPIRY_SECONDS * 1000,
+      isGenerating: false,
+      gmailAddress: "",
       activeMode: "temp",
-    });
-  },
 
-  setGmailAddress: (email: string) => set({ gmailAddress: email }),
-  setActiveMode: (mode: "temp" | "gmail") => set({ activeMode: mode }),
-}));
+      initEmail: () => {
+        const { currentEmail } = get();
+        if (!currentEmail || currentEmail === "x8fk2q@mail.hassanai.xyz") {
+          set({
+            currentEmail: generateEmail(),
+            expiresAt: Date.now() + EXPIRY_SECONDS * 1000,
+          });
+        }
+      },
+
+      generateNewEmail: () => {
+        set({ isGenerating: true });
+        setTimeout(() => {
+          set({
+            currentEmail: generateEmail(),
+            expiresAt: Date.now() + EXPIRY_SECONDS * 1000,
+            isGenerating: false,
+            activeMode: "temp",
+          });
+        }, 500);
+      },
+
+      generateGmailAlias: async () => {
+        set({ isGenerating: true });
+        try {
+          const res = await fetch("/api/gmail/generate");
+          if (!res.ok) throw new Error("Failed to generate gmail alias");
+          const data = await res.json();
+          if (data.email) {
+            set({ currentEmail: data.email, activeMode: "gmail" });
+          }
+        } catch (err) {
+          console.error(err);
+        } finally {
+          set({ isGenerating: false });
+        }
+      },
+
+      extendTime: () => {
+        set((state) => ({
+          expiresAt: Math.max(state.expiresAt, Date.now()) + EXPIRY_SECONDS * 1000,
+        }));
+      },
+
+      deleteInbox: () => {
+        set({
+          currentEmail: generateEmail(),
+          expiresAt: Date.now() + EXPIRY_SECONDS * 1000,
+          activeMode: "temp",
+        });
+      },
+
+      setGmailAddress: (email: string) => set({ gmailAddress: email }),
+      setActiveMode: (mode: "temp" | "gmail") => set({ activeMode: mode }),
+    }),
+    {
+      name: "temp-mail-storage",
+      partialize: (state) => ({
+        currentEmail: state.currentEmail,
+        expiresAt: state.expiresAt,
+        activeMode: state.activeMode,
+      }),
+    }
+  )
+);
